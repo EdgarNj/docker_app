@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  front:
+    build:
+      context: .
+      dockerfile: Dockerfile_front
+    volumes:
+      - /home/david/work/edgar/green-gyumri-front:/app
+    ports:
+      - 3001:3001
+    expose:
+      - "3001"
+    command: yarn start
+    depends_on:
+      - "back"    
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile_admin
+    volumes:
+      - /home/david/work/edgar/green-gyumri-admin:/app
+    ports:
+      - 3000:3000
+    expose:
+      - "3000"
+    command: yarn start
+    depends_on:
+      - "front"
+  back:
+    build:
+      context: .
+      dockerfile: Dockerfile_back
+    volumes:
+      - /home/david/work/edgar/green-gyumri-back:/app
+    ports:
+      - 4000:4000
+    expose:
+      - "4000"
+    command: yarn start
+    depends_on:
+      - "db"    
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - db-data:/var/lib/mysql
+volumes:
+  db-data:

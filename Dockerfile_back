@@ -1,0 +1,10 @@
+FROM alpine:latest
+RUN apk add nodejs npm
+RUN npm install yarn -global
+
+WORKDIR /app
+
+EXPOSE 4000/udp
+EXPOSE 4000/tcp
+
+CMD ["yarn && yarn migrate && npm install --os=linux --libc=musl --cpu=x64 sharp"]
